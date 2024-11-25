@@ -12,7 +12,8 @@ class UrlMappings {
             action = [GET: "search"]
         }
 
-        "500"(view: '/error')
-        "404"(view: '/notFound')
+        "500"(GET: '/handleError')
+        "404"(GET: '/handleError404')
+
     }
 }

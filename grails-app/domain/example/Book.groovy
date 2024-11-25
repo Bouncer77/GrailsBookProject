@@ -22,6 +22,29 @@ class Book {
 
     // оценку книге - максимальная оценка 5, минимальная 1
     // Integer score
+    Book(Book book) {
+        this.id = book.id
+        this.name = book.name
+        this.author = book.author
+        this.year = book.year
+        this.description = book.description
+    }
+
+    Book(Integer id, String name, String author, Integer year, String description) {
+        this.id = id
+        this.name = name
+        this.author = author
+        this.year = year
+        this.description = description
+    }
+
+    Book(Map json) {
+        this.id = json.id
+        this.name = json.name
+        this.author = json.author
+        this.year = json.year
+        this.description = json.description
+    }
 
     static constraints = {
         name blank: false

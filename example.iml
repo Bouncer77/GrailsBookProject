@@ -39,5 +39,7 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="inheritedJdk" />
     <orderEntry type="library" name="org.grails.ide.eclipse.core.CLASSPATH_CONTAINER" level="application" />
+    <orderEntry type="library" name="groovy-2.4.21" level="project" />
+    <orderEntry type="library" name="groovy-2.4.21 (2)" level="project" />
   </component>
 </module>
