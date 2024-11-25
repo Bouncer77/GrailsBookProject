@@ -31,7 +31,7 @@ class BookController {
         }
     }
 
-    // Обработчик ошибок 500 серверная ошибка
+    /*// Обработчик ошибок 500 серверная ошибка
     def handleError(Exception e) {
         log.error("An error occurred: ${e.message}", e)
         render status: HttpStatus.INTERNAL_SERVER_ERROR
@@ -41,17 +41,20 @@ class BookController {
     def handleError404() {
         log.error("An error occurred: ${e.message}", e)
         render status: HttpStatus.NOT_FOUND
-    }
+    }*/
 
     // POST /api/books
     def save() {
         try {
             def book = new Book(request.JSON)
+
+            println "Input: ${book}"
+
             if (!book.save(flush: true)) {
                 render status: UNPROCESSABLE_ENTITY
                 return
             }
-
+            return
             response.status = HttpStatus.CREATED
             withFormat {
                 json { render book as JSON }
@@ -60,6 +63,7 @@ class BookController {
             handleError(e)
         }
     }
+
 
 
     // PUT /book/${id}

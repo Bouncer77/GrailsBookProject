@@ -6,11 +6,11 @@ class BootStrap {
         // Настройка JSON рендеринга
         JSON.registerObjectMarshaller(Book) { Book book ->
             return [
-                    id    : book.id,
-                    name  : book.name,
-                    author: book.author,
-                    year  : book.year,
-                    isbn  : book.description
+                    id          : book.id,
+                    name        : book.name,
+                    author      : book.author,
+                    year        : book.year,
+                    description : book.description
             ]
         }
 
@@ -28,21 +28,21 @@ class BootStrap {
 
                     new Book(
                             id: 2,
-                            name: "Война и мир",
-                            author: "Лев Толстой",
+                            name: "War and Peace",
+                            author: "Leo Tolstoy",
                             year: 1869,
                             description: "978-5170880851"
                     ).save(failOnError: true)
 
                     new Book(
                             id: 3,
-                            name: "Мастер и Маргарита",
-                            author: "Михаил Булгаков",
+                            name: "The Master and Margarita",
+                            author: "Mikhail Bulgakov",
                             year: 1967,
                             description: "978-5170878895"
                     ).save(failOnError: true)
 
-                    println "Добавлено ${Book.count()} тестовых книг"
+                    println "Added ${Book.count()} tests books"
                 }
             }
         }

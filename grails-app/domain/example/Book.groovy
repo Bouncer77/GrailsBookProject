@@ -53,7 +53,15 @@ class Book {
         description nullable: true
     }
 
-    String toString() {
-        "${name} by ${author}"
+
+    @Override
+    public String toString() {
+        return "Book{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", author='" + author + '\'' +
+                ", year=" + year +
+                ", description='" + description + '\'' +
+                '}';
     }
 }
