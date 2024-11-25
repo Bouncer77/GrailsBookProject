@@ -1,19 +1,15 @@
 class UrlMappings {
     static mappings = {
         "/api/books"(controller: "book") {
-            action = [GET: "index", POST: "save"]
+            action = [GET: "getBooks", POST: "save"]
+        }
+
+        "/api/books/year/desc"(controller: "book") {
+            action = [GET: "getBooksOrderByYearDesc"]
         }
 
         "/api/books/$id"(controller: "book") {
-            action = [GET: "show", PUT: "update", DELETE: "delete"]
+            action = [GET: "getBookById", POST: "update", DELETE: "bookDelete"]
         }
-
-        "/api/books/search"(controller: "book") {
-            action = [GET: "search"]
-        }
-
-        /*"500"(GET: '/handleError')
-        "404"(GET: '/handleError404')*/
-
     }
 }

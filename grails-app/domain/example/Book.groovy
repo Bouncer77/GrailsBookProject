@@ -57,6 +57,33 @@ class Book {
         description nullable: true
     }
 
+    Integer getId() {
+        return id
+    }
+
+    void setId(Integer id) {
+        this.id = id
+    }
+
+    String getName() {
+        return name
+    }
+
+    String getAuthor() {
+        return author
+    }
+
+    Integer getYear() {
+        return year
+    }
+
+    String getDescription() {
+        return description
+    }
+
+    static getConstraints() {
+        return constraints
+    }
 
     @Override
     String toString() {

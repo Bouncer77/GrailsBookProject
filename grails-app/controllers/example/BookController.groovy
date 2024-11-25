@@ -1,27 +1,48 @@
 package example
 
 import grails.converters.JSON
+import groovy.sql.Sql
+
+import javax.sql.DataSource
 
 class BookController {
 
+    static transactional = true
+
     static responseFormats = ['json']
 
-    static allowedMethods = [
-            save  : "POST",
-            update: "PUT",
-            delete: "DELETE"
-    ]
+    DataSource dataSource
+
+    // GET /api/indexCustom
+    def getBooksOrderByYearDesc() {
+        def sql = new Sql(dataSource)
+        def books = []
+
+        sql.eachRow('SELECT * FROM book') { row ->
+            books << [
+                    id: row.id,
+                    name: row.name,
+                    author: row.author,
+                    year: row.year,
+                    description: row.description
+            ]
+        }
+
+        sql.close()
+
+        render books as JSON
+    }
 
     // GET /api/books
-    def index() {
-        def books = Book.list()
+    def getBooks() {
+        def books = Book.list(sort: "year")
         withFormat {
             json { render books as JSON }
         }
     }
 
     // GET /api/books/${id}
-    def show(Long id) {
+    def getBookById(Integer id) {
         def book = Book.get(id)
         if (!book) {
             render status: NOT_FOUND
@@ -31,56 +52,66 @@ class BookController {
             json { render book as JSON }
         }
     }
-
-    /*// Обработчик ошибок 500 серверная ошибка
-    def handleError(Exception e) {
-        log.error("An error occurred: ${e.message}", e)
-        render status: HttpStatus.INTERNAL_SERVER_ERROR
-    }
-
-    // Обработчик ошибок 404 не найден
-    def handleError404() {
-        log.error("An error occurred: ${e.message}", e)
-        render status: HttpStatus.NOT_FOUND
-    }*/
 
     // POST /api/books
     def save() {
         def book = new Book(request.JSON)
         println "Input: ${book}"
         book.save()
-    }
-
-
-    // PUT /book/${id}
-    def update(Long id) {
-        def book = Book.get(id)
-        if (!book) {
-            render status: NOT_FOUND
-            return
-        }
-
-        book.properties = request.JSON
-        if (!book.save(flush: true)) {
-            render status: UNPROCESSABLE_ENTITY
-            return
-        }
 
         withFormat {
             json { render book as JSON }
         }
     }
 
-    // DELETE /api/books/${id}
-    def delete(Long id) {
-        def book = Book.get(id)
+
+    // PUT /api/books/${id}
+    def update(Integer id) {
+
+        def newBook = new Book(request.JSON)
+        newBook.update(flush: true)
+/*
+        Book book = Book.get(id)
+        println "In DB: ${book}"
+        println "---------"
 
         if (!book) {
             render status: NOT_FOUND
             return
         }
 
+        def newBook = new Book(request.JSON)
+        println "Input: ${newBook}"
+        println "---------"
+
+        newBook.setId(book.getId())
+        println "Set ID: ${newBook}"
+        println "---------"
+
+        if (!newBook.update(flush: true)) {
+            render status: UNPROCESSABLE_ENTITY
+            return
+        }*/
+
+        withFormat {
+            json { render newBook as JSON }
+        }
+    }
+
+    // DELETE /api/books/${id}/delete
+    def bookDelete(Integer id) {
+        def book = Book.get(id)
         book.delete()
-        render status: NO_CONTENT
+        println "Deleted: ${book}"
+
+        /*def sql = new Sql(dataSource)
+        try {
+            sql.execute("DELETE FROM book WHERE id = ?", [id])
+            render status: NO_CONTENT
+        } catch (Exception e) {
+            render status: INTERNAL_SERVER_ERROR, text: "Error deleting book: ${e.message}"
+        } finally {
+            sql.close()
+        }*/
     }
 }
