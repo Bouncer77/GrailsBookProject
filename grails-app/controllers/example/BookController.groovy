@@ -1,92 +1,100 @@
 package example
 
+import grails.converters.JSON
+import grails.converters.XML
+import static org.springframework.http.HttpStatus.*
+
 class BookController {
-    static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
+    static responseFormats = ['json', 'xml']
+    static allowedMethods = [
+            save: "POST",
+            update: "PUT",
+            delete: "DELETE"
+    ]
 
+    // GET /book
     def index() {
-        respond Book.list(params), model:[bookCount: Book.count()]
+        def books = Book.list()
+        withFormat {
+            json { render books as JSON }
+            xml { render books as XML }
+        }
     }
 
-    def show(Book book) {
-        respond book
+    // GET /book/${id}
+    def show(Long id) {
+        def book = Book.get(id)
+        if (!book) {
+            render status: NOT_FOUND
+            return
+        }
+        withFormat {
+            json { render book as JSON }
+            xml { render book as XML }
+        }
     }
 
-    def create() {
-        respond new Book(params)
-    }
-
-    def save(Book book) {
-        if (book == null) {
-            notFound()
+    // POST /book
+    def save() {
+        def book = new Book(request.JSON)
+        if (!book.save(flush: true)) {
+            render status: UNPROCESSABLE_ENTITY
             return
         }
 
-        if (book.hasErrors()) {
-            respond book.errors, view:'create'
+        response.status = CREATED.value()
+        withFormat {
+            json { render book as JSON }
+            xml { render book as XML }
+        }
+    }
+
+    // PUT /book/${id}
+    def update(Long id) {
+        def book = Book.get(id)
+        if (!book) {
+            render status: NOT_FOUND
             return
         }
 
-        book.save flush:true
+        book.properties = request.JSON
+        if (!book.save(flush: true)) {
+            render status: UNPROCESSABLE_ENTITY
+            return
+        }
 
-        request.withFormat {
-            form multipartForm {
-                flash.message = "Книга успешно создана"
-                redirect book
+        withFormat {
+            json { render book as JSON }
+            xml { render book as XML }
+        }
+    }
+
+    // DELETE /book/${id}
+    def delete(Long id) {
+        def book = Book.get(id)
+        if (!book) {
+            render status: NOT_FOUND
+            return
+        }
+
+        book.delete(flush: true)
+        render status: NO_CONTENT
+    }
+
+    // GET /book/search?q=${query}
+    def search() {
+        def query = params.q
+        def books = Book.createCriteria().list {
+            or {
+                ilike('title', "%${query}%")
+                ilike('author', "%${query}%")
+                ilike('isbn', "%${query}%")
             }
-            '*' { respond book, [status: CREATED] }
-        }
-    }
-
-    def edit(Book book) {
-        respond book
-    }
-
-    def update(Book book) {
-        if (book == null) {
-            notFound()
-            return
         }
 
-        if (book.hasErrors()) {
-            respond book.errors, view:'edit'
-            return
-        }
-
-        book.save flush:true
-
-        request.withFormat {
-            form multipartForm {
-                flash.message = "Книга успешно обновлена"
-                redirect book
-            }
-            '*'{ respond book, [status: OK] }
-        }
-    }
-
-    def delete(Book book) {
-        if (book == null) {
-            notFound()
-            return
-        }
-
-        book.delete flush:true
-
-        request.withFormat {
-            form multipartForm {
-                flash.message = "Книга успешно удалена"
-                redirect action:"index", method:"GET"
-            }
-            '*'{ render status: NO_CONTENT }
-        }
-    }
-
-    protected void notFound() {
-        request.withFormat {
-            form multipartForm {
-                flash.message = "Книга не найдена"
-                redirect action: "index", method: "GET"
-            }
-            '*'{ render status: NOT_FOUND }
+        withFormat {
+            json { render books as JSON }
+            xml { render books as XML }
         }
     }
 }

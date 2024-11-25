@@ -1,19 +1,32 @@
 package example
 
 class Book {
-    String title
+    // наименование книги
+    String name
+
+    // изображение обложки книги
+    // String img
+
+    // автор
     String author
+
+    // год издания
     Integer year
-    String isbn
+
+    // краткое описание книги
+    String description
+
+    // оценку книге - максимальная оценка 5, минимальная 1
+    // Integer score
 
     static constraints = {
-        title blank: false
+        name blank: false
         author blank: false
         year nullable: false, min: 1000
-        isbn nullable: true
+        description nullable: true
     }
 
     String toString() {
-        "${title} by ${author}"
+        "${name} by ${author}"
     }
 }
