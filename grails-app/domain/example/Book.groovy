@@ -1,6 +1,10 @@
 package example
 
 class Book {
+
+    // Уникальный идентификатор книги
+    Integer id
+
     // наименование книги
     String name
 

@@ -1,11 +1,9 @@
 package example
 
 import grails.converters.JSON
-import grails.converters.XML
-import static org.springframework.http.HttpStatus.*
 
 class BookController {
-    static responseFormats = ['json', 'xml']
+    static responseFormats = ['json']
     static allowedMethods = [
             save: "POST",
             update: "PUT",
@@ -17,7 +15,6 @@ class BookController {
         def books = Book.list()
         withFormat {
             json { render books as JSON }
-            xml { render books as XML }
         }
     }
 
@@ -30,7 +27,6 @@ class BookController {
         }
         withFormat {
             json { render book as JSON }
-            xml { render book as XML }
         }
     }
 
@@ -45,7 +41,6 @@ class BookController {
         response.status = CREATED.value()
         withFormat {
             json { render book as JSON }
-            xml { render book as XML }
         }
     }
 
@@ -65,7 +60,6 @@ class BookController {
 
         withFormat {
             json { render book as JSON }
-            xml { render book as XML }
         }
     }
 
@@ -94,7 +88,6 @@ class BookController {
 
         withFormat {
             json { render books as JSON }
-            xml { render books as XML }
         }
     }
 }
