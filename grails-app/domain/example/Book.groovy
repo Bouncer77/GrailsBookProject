@@ -2,6 +2,9 @@ package example
 
 class Book {
 
+    // public static int count = 0
+    // private static List<Book> books = new ArrayList<>()
+
     // Уникальный идентификатор книги
     Integer id
 
@@ -22,6 +25,7 @@ class Book {
 
     // оценку книге - максимальная оценка 5, минимальная 1
     // Integer score
+
     Book(Book book) {
         this.id = book.id
         this.name = book.name
@@ -39,10 +43,10 @@ class Book {
     }
 
     Book(Map json) {
-        this.id = json.id
+        this.id = json.id as Integer
         this.name = json.name
         this.author = json.author
-        this.year = json.year
+        this.year = json.year as Integer
         this.description = json.description
     }
 
@@ -55,7 +59,7 @@ class Book {
 
 
     @Override
-    public String toString() {
+    String toString() {
         return "Book{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
