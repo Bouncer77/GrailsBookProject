@@ -9,7 +9,7 @@ class UrlMappings {
         }
 
         "/api/books/$id"(controller: "book") {
-            action = [GET: "getBookById", POST: "update", DELETE: "bookDelete"]
+            action = [GET: "getBookById", PUT: "update", DELETE: "bookDelete"]
         }
     }
 }

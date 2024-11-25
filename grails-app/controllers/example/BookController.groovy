@@ -68,50 +68,38 @@ class BookController {
     // PUT /api/books/${id}
     def update(Integer id) {
 
-        def newBook = new Book(request.JSON)
-        newBook.update(flush: true)
-/*
         Book book = Book.get(id)
-        println "In DB: ${book}"
-        println "---------"
-
-        if (!book) {
-            render status: NOT_FOUND
-            return
-        }
-
-        def newBook = new Book(request.JSON)
-        println "Input: ${newBook}"
-        println "---------"
-
+        Book newBook = new Book(request.JSON)
         newBook.setId(book.getId())
-        println "Set ID: ${newBook}"
-        println "---------"
 
-        if (!newBook.update(flush: true)) {
-            render status: UNPROCESSABLE_ENTITY
-            return
-        }*/
+        newBook.update(flush: true)
 
         withFormat {
             json { render newBook as JSON }
         }
     }
 
-    // DELETE /api/books/${id}/delete
+    // DELETE /api/books/${id}
     def bookDelete(Integer id) {
-        def book = Book.get(id)
-        book.delete()
-        println "Deleted: ${book}"
 
-        /*def sql = new Sql(dataSource)
+        println "Deleted: ${id}"
+        def book = Book.get(id)
+
+        // book.delete() // не работает
+
+        def sql = new Sql(dataSource)
         try {
             sql.execute("DELETE FROM book WHERE id = ?", [id])
-            render status: NO_CONTENT
         } catch (Exception e) {
             render status: INTERNAL_SERVER_ERROR, text: "Error deleting book: ${e.message}"
         } finally {
             sql.close()
-        }*/
+        }
+
+        println "Deleted: ${book}"
+
+        withFormat {
+            json { render book as JSON }
+        }
     }
 }
