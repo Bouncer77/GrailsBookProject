@@ -11,5 +11,18 @@ class UrlMappings {
         "/api/books/$id"(controller: "book") {
             action = [GET: "getBookById", POST: "update", DELETE: "bookDelete"]
         }
+
+
+        "/api/students"(controller: "student") {
+            action = [GET: "index", POST: "save"]
+        }
+
+        "/api/students/$id"(controller: "student") {
+            action = [GET: "show", DELETE: "delete"]
+        }
+
+        "/api/students/create"(controller: "student") {
+            action = [GET: "create"]
+        }
     }
 }
