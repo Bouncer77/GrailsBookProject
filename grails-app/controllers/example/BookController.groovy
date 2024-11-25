@@ -65,7 +65,7 @@ class BookController {
     }
 
 
-    // PUT /api/books/${id}
+    /*// PUT /api/books/${id}
     def update(Integer id) {
 
         Book book = Book.get(id)
@@ -76,6 +76,28 @@ class BookController {
 
         withFormat {
             json { render newBook as JSON }
+        }
+    }*/
+
+    // PUT /api/books/${id}
+    def bookUpdate(Integer id) {
+        def sql = new Sql(dataSource)
+        def bookData = request.JSON
+
+        try {
+            sql.executeUpdate(
+                    "UPDATE book SET name = ?, author = ?, year = ?, description = ? WHERE id = ?",
+                    [bookData.name, bookData.author, bookData.year, bookData.description, id]
+            )
+            // render status: OK, text: "Book updated successfully"
+        } catch (Exception e) {
+            render status: INTERNAL_SERVER_ERROR, text: "Error updating book: ${e.message}"
+        } finally {
+            sql.close()
+        }
+
+        withFormat {
+            json { render bookData as JSON }
         }
     }
 
